@@ -25,9 +25,12 @@ async def hello(request: Request, name: str = Form(...)):
     if name:
         variable_name = "MY_VARIABLE"
         variable_value = os.getenv(variable_name)
-
-        print(f"The value of {variable_name} is {variable_value}")
-        return templates.TemplateResponse('hello.html', {"request": request, 'name': name + variable_value})
+        if "MY_VARIABLE" in os.environ:
+            print(f"The value of {variable_name} is {variable_value}")
+            return templates.TemplateResponse('hello.html', {"request": request, 'name': name + variable_value})
+        else:
+            print("MY_VARIABLE does not exist")
+            return templates.TemplateResponse('hello.html', {"request": request, 'name': name + "MY_VARIABLE does not exist"})
         # print('Request for hello page received with name=%s' % name)
         # return templates.TemplateResponse('hello.html', {"request": request, 'name':name})
     else:
