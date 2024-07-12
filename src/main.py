@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import uvicorn
-import os
+
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -23,16 +23,8 @@ async def favicon():
 @app.post('/hello', response_class=HTMLResponse)
 async def hello(request: Request, name: str = Form(...)):
     if name:
-        variable_name = "MY_VARIABLE"
-        variable_value = os.getenv(variable_name)
-        if "MY_VARIABLE" in os.environ:
-            print(f"The value of {variable_name} is {variable_value}")
-            return templates.TemplateResponse('hello.html', {"request": request, 'name': name + variable_value})
-        else:
-            print("MY_VARIABLE does not exist")
-            return templates.TemplateResponse('hello.html', {"request": request, 'name': name + "MY_VARIABLE does not exist"})
-        # print('Request for hello page received with name=%s' % name)
-        # return templates.TemplateResponse('hello.html', {"request": request, 'name':name})
+        print('Request for hello page received with name=%s' % name)
+        return templates.TemplateResponse('hello.html', {"request": request, 'name':name})
     else:
         print('Request for hello page received with no name or blank name -- redirecting')
         return RedirectResponse(request.url_for("index"), status_code=status.HTTP_302_FOUND)
